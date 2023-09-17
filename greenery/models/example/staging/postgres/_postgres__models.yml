@@ -1,24 +1,24 @@
 version: 2
 
 models:
-  - name: stg_addresses
+  - name: stg_postgres__addresses
     description: |
       Staging table 
-  - name: stg_events
+  - name: stg_postgres__events
     description: |
       Staging table 
-  - name: stg_order_items
+  - name: stg_postgres__order_items
     description: |
       Staging table 
-  - name: stg_products
+  - name: stg_postgres__products
     description: |
       Staging table 
-  - name: stg_orders
+  - name: stg_postgres__orders
     description: |
       Staging table 
-  - name: stg_promos
+  - name: stg_postgres__promos
     description: |
       Staging table 
-  - name: stg_users
+  - name: stg_postgres__users
     description: |
       Staging table 
