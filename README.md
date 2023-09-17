@@ -1,101 +1,101 @@
-# Analytics engineering with dbt
+# Analytics Engineering with dbt
 
 ## Week 1 Project Answers
 
-* How many users do we have?
+### 1. How many users do we have?
 
-  * There are 130 users
-  * SQL:
-    `SELECT COUNT(*) as NUM_OF_USERS `
-    `FROM DEV_DB.DBT_ALEKSEEVADDGMAILCOM.STG_POSTGRES__USERS`
-* On average, how many orders do we receive per hour?
+- **Answer**: There are 130 users.
 
-  * We receive 7.68 orders per hour
-  * * SQL:
-      `WITH TimeRange AS ('`
-      `SELECT`
-      `MIN(CREATED_AT) AS StartTimestamp,`
-      `MAX(CREATED_AT) AS EndTimestamp`
-      `FROM`
-      `DEV_DB.DBT_ALEKSANDERSOKOL9GMAILCOM.STG_ORDERS`
-      `),`
+- **SQL Query**:
+  ```sql
+  SELECT COUNT(*) as NUM_OF_USERS
+  FROM DEV_DB.DBT_ALEKSEEVADDGMAILCOM.STG_POSTGRES__USERS;
+  ```
 
-      `TotalHours AS (`
-      `SELECT`
-      `TIMESTAMPDIFF(HOUR, StartTimestamp, EndTimestamp) AS HoursDifference`
-      `FROM`
-      `TimeRange)`
+### 2. On average, how many orders do we receive per hour?
 
-      `SELECT`
-      `(SELECT COUNT(*) FROM DEV_DB.DBT_ALEKSANDERSOKOL9GMAILCOM.STG_ORDERS) / HoursDifference AS` `AverageOrdersPerHour`
-      `FROM`
-      `TotalHours;`
-* On average, how long does an order take from being placed to being delivered?
+- **Answer**: We receive 7.68 orders per hour.
 
-  * It takes 93.4 hours on average
-  * * SQL:
-      `SELECT`
-      `AVG(TIMESTAMPDIFF(HOUR, CREATED_AT, DELIVERED_AT)) AS AverageDeliveryTimeInHours`
-      `FROM`
-      `DEV_DB.DBT_ALEKSANDERSOKOL9GMAILCOM.STG_ORDERS`
-      `WHERE`
-      `DELIVERED_AT IS NOT NULL;SELECT COUNT(*) as NUM_OF_USER`
-* How many users have only made one purchase? Two purchases? Three+ purchases?
+- **SQL Query**:
+  ```sql
+  WITH TimeRange AS (
+      SELECT
+          MIN(CREATED_AT) AS StartTimestamp,
+          MAX(CREATED_AT) AS EndTimestamp
+      FROM DEV_DB.DBT_ALEKSANDERSOKOL9GMAILCOM.STG_ORDERS
+  ),
+  TotalHours AS (
+      SELECT
+          TIMESTAMPDIFF(HOUR, StartTimestamp, EndTimestamp) AS HoursDifference
+      FROM TimeRange
+  )
+  SELECT
+      (SELECT COUNT(*) FROM DEV_DB.DBT_ALEKSANDERSOKOL9GMAILCOM.STG_ORDERS) / HoursDifference AS AverageOrdersPerHour
+  FROM TotalHours;
+  ```
 
-  * There are:
+### 3. On average, how long does an order take from being placed to being delivered?
 
-    * 25 users who made 1 purchase
-    * 28 users who made 2 purchases
-    * 71 users who made 3+ purchases
-    * SQL:
+- **Answer**: It takes 93.4 hours on average.
 
-      `WITH UserPurchaseCount AS (`
-      `SELECT`
-      `USER_ID,`
-      `COUNT(ORDER_ID) AS NumberOfPurchases`
-      `FROM`
-      `DEV_DB.DBT_ALEKSANDERSOKOL9GMAILCOM.STG_ORDERS`
-      `GROUP BY`
-      `USER_ID`
-      `)`
+- **SQL Query**:
+  ```sql
+  SELECT
+      AVG(TIMESTAMPDIFF(HOUR, CREATED_AT, DELIVERED_AT)) AS AverageDeliveryTimeInHours
+  FROM DEV_DB.DBT_ALEKSANDERSOKOL9GMAILCOM.STG_ORDERS
+  WHERE DELIVERED_AT IS NOT NULL;
+  ```
 
-      `SELECT`
-      `SUM(CASE WHEN NumberOfPurchases = 1 THEN 1 ELSE 0 END) AS OnePurchaseUsers,`
-      `SUM(CASE WHEN NumberOfPurchases = 2 THEN 1 ELSE 0 END) AS TwoPurchaseUsers,`
-      `SUM(CASE WHEN NumberOfPurchases >= 3 THEN 1 ELSE 0 END) AS ThreeOrMorePurchaseUsers`
-      `FROM`
-      `UserPurchaseCount`
-* On average, how many unique sessions do we have per hour
+### 4. How many users have only made one purchase? Two purchases? Three+ purchases?
 
-  * We have 10.14 unique sessions per hour
-  * SQL:
+- **Answer**: 
+  - 25 users who made 1 purchase
+  - 28 users who made 2 purchases
+  - 71 users who made 3+ purchases
 
-    `WITH TimeRange AS (`
-    `SELECT`
-    `MIN(CREATED_AT) AS StartTimestamp,`
-    `MAX(CREATED_AT) AS EndTimestamp`
-    `FROM`
-    `YourTableName`
-    `),`
+- **SQL Query**:
+  ```sql
+  WITH UserPurchaseCount AS (
+      SELECT
+          USER_ID,
+          COUNT(ORDER_ID) AS NumberOfPurchases
+      FROM DEV_DB.DBT_ALEKSANDERSOKOL9GMAILCOM.STG_ORDERS
+      GROUP BY USER_ID
+  )
+  SELECT
+      SUM(CASE WHEN NumberOfPurchases = 1 THEN 1 ELSE 0 END) AS OnePurchaseUsers,
+      SUM(CASE WHEN NumberOfPurchases = 2 THEN 1 ELSE 0 END) AS TwoPurchaseUsers,
+      SUM(CASE WHEN NumberOfPurchases >= 3 THEN 1 ELSE 0 END) AS ThreeOrMorePurchaseUsers
+  FROM UserPurchaseCount;
+  ```
 
-    `TotalHours AS (`
-    `SELECT`
-    `TIMESTAMPDIFF(HOUR, StartTimestamp, EndTimestamp) AS HoursDifference`
-    `FROM`
-    `TimeRange`
-    `),`
+### 5. On average, how many unique sessions do we have per hour?
 
-    `UniqueSessions AS (`
-    `SELECT`
-    `COUNT(DISTINCT SESSION_ID) AS TotalUniqueSessions`
-    `FROM`
-    `DEV_DB.DBT_ALEKSANDERSOKOL9GMAILCOM.STG_POSTGRES__EVENTS`
-    `)`
+- **Answer**: We have 10.14 unique sessions per hour.
 
-    `SELECT`
-    `TotalUniqueSessions / HoursDifference AS UniqueSessionsPerHour`
-    `FROM`
-    `UniqueSessions, TotalHours`
+- **SQL Query**:
+  ```sql
+  WITH TimeRange AS (
+      SELECT
+          MIN(CREATED_AT) AS StartTimestamp,
+          MAX(CREATED_AT) AS EndTimestamp
+      FROM YourTableName
+  ),
+  TotalHours AS (
+      SELECT
+          TIMESTAMPDIFF(HOUR, StartTimestamp, EndTimestamp) AS HoursDifference
+      FROM TimeRange
+  ),
+  UniqueSessions AS (
+      SELECT
+          COUNT(DISTINCT SESSION_ID) AS TotalUniqueSessions
+      FROM DEV_DB.DBT_ALEKSANDERSOKOL9GMAILCOM.STG_POSTGRES__EVENTS
+  )
+  SELECT
+      TotalUniqueSessions / HoursDifference AS UniqueSessionsPerHour
+  FROM UniqueSessions, TotalHours;
+  ```
+
 
 ## License
 
