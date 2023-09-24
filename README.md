@@ -1,5 +1,35 @@
 # Analytics Engineering with dbt
 
+## Week 2 Project Answers
+### What is our user repeat rate?
+
+- **Answer**: There are 0.798 repeat orders per user.
+- - **SQL Query**:
+  ```sql
+  WITH UserPurchaseCounts AS (
+      -- Count the number of unique orders for each user
+      SELECT 
+          USER_ID, 
+          COUNT(DISTINCT ORDER_ID) AS PurchaseCount
+      FROM 
+          STG_POSTGRES__ORDERS
+      GROUP BY 
+          USER_ID
+  )
+
+  -- Calculate the repeat rate
+  SELECT 
+      CAST(SUM(CASE WHEN PurchaseCount >= 2 THEN 1 ELSE 0 END) AS FLOAT) / COUNT(USER_ID) AS RepeatRate
+  FROM 
+      UserPurchaseCounts;
+  ```
+
+### What are good indicators of a user who will likely purchase again? What about indicators of users who are likely NOT to purchase again? If you had more data, what features would you want to look into to answer this question?
+Indicators of a User Likely to Purchase Again:
+- Repeat Purchases: Users who have made multiple purchases in the past are generally more likely to purchase again.
+- High Engagement: Users who frequently visit the website, spend more time on it, or engage with marketing emails (open rates, click-through rates) are more engaged and thus more likely to make a purchase.
+- Positive Reviews/Feedback: Users who leave positive reviews or feedback have had a satisfactory experience and are more likely to return
+
 ## Week 1 Project Answers
 
 ### 1. How many users do we have?
