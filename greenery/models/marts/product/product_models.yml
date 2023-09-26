@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: fact_page_views
+    description: |
+      Fact table for page metrics 
+    tests:
+      - unique:
+          column_name: page_view_id
+      - not_null:
+          column_name: page_view_id
+      - not_null:
+          column_name: user_id
+      - not_null:
+          column_name: session_id
+      - not_null:
+          column_name: page_url
+      - not_null:
+          column_name: created_at
+      - relationships:
+          column_name: user_id
+          to: ref('dim_user')
+          field: user_id
+      - relationships:
+          column_name: date_key
+          to: ref('dim_date')
+          field: date
+

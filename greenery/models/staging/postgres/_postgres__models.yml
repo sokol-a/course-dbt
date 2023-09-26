@@ -1,0 +1,90 @@
+version: 2
+
+models:
+  - name: stg_postgres__addresses
+    description: |
+      Staging table 
+    tests:
+      - unique:
+          column_name: address_id
+      - not_null:
+          column_name: address_id
+  - name: stg_postgres__events
+    description: |
+      Staging table 
+    tests:
+      - unique:
+          column_name: event_id
+      - not_null:
+          column_name: event_id
+      - not_null:
+          column_name: session_id
+      - not_null:
+          column_name: user_id
+      - not_null:
+          column_name: created_at
+  - name: stg_postgres__order_items
+    description: |
+      Staging table 
+    tests:
+      - not_null:
+          column_name: order_id
+      - not_null:
+          column_name: product_id
+      - not_null:
+          column_name: quantity
+  - name: stg_postgres__products
+    description: |
+      Staging table
+    tests:
+      - unique:
+          column_name: product_id
+      - not_null:
+          column_name: product_id
+      - not_null:
+          column_name: name
+      - not_null:
+          column_name: price
+      - not_null:
+          column_name: inventory 
+  - name: stg_postgres__orders
+    description: |
+      Staging table
+    tests:
+      - unique:
+          column_name: order_id
+      - not_null:
+          column_name: order_id
+      - not_null:
+          column_name: user_id
+      - not_null:
+          column_name: created_at
+      - not_null:
+          column_name: order_total 
+  - name: stg_postgres__promos
+    description: |
+      Staging table
+    tests:
+      - unique:
+          column_name: promo_id
+      - not_null:
+          column_name: promo_id
+      - not_null:
+          column_name: discount
+      - not_null:
+          column_name: status
+  - name: stg_postgres__users
+    description: |
+      Staging table
+    tests:
+      - unique:
+          column_name: user_id
+      - not_null:
+          column_name: user_id
+      - not_null:
+          column_name: first_name
+      - not_null:
+          column_name: last_name
+      - not_null:
+          column_name: email
+ 

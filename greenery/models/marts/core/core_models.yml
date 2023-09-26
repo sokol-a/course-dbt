@@ -1,0 +1,48 @@
+version: 2
+
+models:
+  - name: dim_date
+    description: |
+      Dimension table for dates 
+    tests:
+      - unique:
+          column_name: date
+      - not_null:
+          column_name: date
+      - not_null:
+          column_name: year
+      - not_null:
+          column_name: quarter
+      - not_null:
+          column_name: month
+      - not_null:
+          column_name: day
+      - not_null:
+          column_name: day_of_year
+      - not_null:
+          column_name: week_of_year
+      - not_null:
+          column_name: day_of_week
+      - not_null:
+          column_name: weekday_weekend
+      - not_null:
+          column_name: season
+
+  - name: dim_user
+    description: |
+      Dimension table for users
+    tests:
+      - unique:
+          column_name: user_id
+      - not_null:
+          column_name: user_id
+      - not_null:
+          column_name: first_name
+      - not_null:
+          column_name: last_name
+      - not_null:
+          column_name: email
+      - relationships:
+          column_name: address_id
+          to: ref('stg_postgres__addresses')
+          field: address_id
