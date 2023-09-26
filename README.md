@@ -30,6 +30,25 @@ Indicators of a User Likely to Purchase Again:
 - High Engagement: Users who frequently visit the website, spend more time on it, or engage with marketing emails (open rates, click-through rates) are more engaged and thus more likely to make a purchase.
 - Positive Reviews/Feedback: Users who leave positive reviews or feedback have had a satisfactory experience and are more likely to return
 
+Indicators of a User Likely to NOT Purchase Again
+- Negative Reviews/Feedback: Users who have had a bad experience are less likely to return.
+- Long Periods of Inactivity: If a user hasn't visited the site or engaged with the brand in a long time, they might have lost interest.
+- Abandoned Carts: Frequently adding products to the cart but not purchasing might indicate hesitation or issues with the purchasing process.
+
+### Queries on `fact_page_views`
+ - Daily Page Views
+   ```sql
+   SELECT 
+     f.date_key AS date,
+     f.product_id,
+     COUNT(f.page_view_id) AS daily_page_views
+   FROM DEV_DB.DBT_ALEKSANDERSOKOL9GMAILCOM.FACT_PAGE_VIEWS f
+   GROUP BY f.date_key, f.product_id
+   ORDER BY f.date_key, daily_page_views DESC;
+   ```
+- 
+
+
 ## Week 1 Project Answers
 
 ### 1. How many users do we have?
