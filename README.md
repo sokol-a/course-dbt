@@ -46,9 +46,104 @@ Indicators of a User Likely to NOT Purchase Again
    GROUP BY f.date_key, f.product_id
    ORDER BY f.date_key, daily_page_views DESC;
    ```
-- 
 
+### Explain the product mart models you added. Why did you organize the models in the way you did?
+I have added 3 models, `fact_page_views`, `dim_user` and `dim_date`. This is how I've organised them:
+- `fact_page_views` is located in product since we can use this table to find out about how our products are performing (traffic etc.)
+- `dim_user` is located in the core folder because it's a table that will likely be used by many other fact tables
+- `dim_date` is also located in core for the same reason
 
+### DAG
+![dbt-dag](https://github.com/sokol-a/course-dbt/assets/62120019/687b88c1-e642-4fb0-a28a-96a1da696aed)
+
+### Tests
+- `fact_page_views`:
+    Assumption: Every page view should have a unique identifier.
+    Test: Uniqueness test on page_view_id.
+    Assumption: Essential attributes of a page view event (like the user, session, page URL, and timestamp) should always be recorded.
+    Test: Not NULL checks on these columns.
+    Assumption: The data in this table should relate to valid users and valid dates.
+    Test: Foreign key relationships for user_id and date_key.
+- `dim_user`:
+    Assumption: Each user should have a unique identifier.
+    Test: Uniqueness test on user_id.
+    Assumption: Basic user details (like name and email) should always be recorded.
+    Test: Not NULL checks.
+    Assumption: Email should follow the standard email format.
+    Test: Email format validation.
+    Assumption: There's an association between users and addresses.
+    Test: Foreign key relationship check on address_id (based on the content provided).
+
+- `dim_date`:
+    Assumption: Each date should have a unique entry.
+    Test: Uniqueness test on the date.
+    Assumption: Essential date attributes like year, quarter, month, etc., should always be populated.
+    Test: Not NULL checks on these columns.
+
+- `stg_postgres__users`:
+    Assumption: Each user in the staging table should have a unique identifier.
+    Test: Uniqueness test on user_id.
+    Assumption: Basic user details should always be recorded.
+    Test: Not NULL checks.
+    Assumption: Email should adhere to the standard format.
+    Test: Email format validation.
+- `stg_postgres__promos`:
+    Assumption: Each promo should have a unique identifier.
+    Test: Uniqueness test on promo_id.
+    Assumption: Essential promo details like discount and status should always be recorded.
+    Test: Not NULL checks.
+
+- `stg_postgres__products`:
+    Assumption: Each product should have a unique identifier.
+    Test: Uniqueness test on product_id.
+    Assumption: Essential product details like name and price should always be recorded.
+    Test: Not NULL checks.
+
+- `stg_postgres__orders`:
+    Assumption: Each order should have a unique identifier.
+    Test: Uniqueness test on order_id.
+    Assumption: Essential order details like user, creation timestamp, and total should always be recorded.
+    Test: Not NULL checks.
+
+- `stg_postgres__order_items`:
+    Assumption: Essential details like quantity should always be recorded.
+    Test: Not NULL checks.
+    Assumption: The data should relate to valid orders and valid products.
+    Test: Foreign key relationships.
+
+- `stg_postgres__events`:
+    Assumption: Each event should have a unique identifier.
+    Test: Uniqueness test on event_id.
+    Assumption: Essential event details like session, user, and timestamp should always be recorded.
+    Test: Not NULL checks.
+
+- `stg_postgres__addresses`:
+    Assumption: Each address should have a unique identifier.
+    Test: Uniqueness test on address_id.
+### Your stakeholders at Greenery want to understand the state of the data each day. Explain how you would ensure these tests are passing regularly and how you would alert stakeholders about bad data getting through.
+
+**Automate Test Execution:**
+
+Scheduled Runs: Use dbt's scheduler or a tool like Apache Airflow to run dbt run (for transformations) and dbt test (for data tests) on a daily basis or at the desired frequency. This ensures that tests are executed consistently.
+Continuous Integration: Integrate dbt within your CI/CD pipeline. Every time there's a change to the dbt models or tests, automatically run the tests to ensure nothing breaks.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+**Monitoring and Alerts:**
+
+Integration with Monitoring Tools: Tools like Datadog, Prometheus, or others can be integrated with dbt runs to monitor the success or failure of the jobs.
+Notification on Failure: If a dbt test fails, set up immediate notifications. This can be achieved using:
+- Email Alerts: Send automated emails to the data team or designated stakeholders.
+- Slack Notifications: Use webhooks to send messages to specific Slack channels.
+- PagerDuty: For critical data issues, integrate with incident management platforms.
+
+### Which products had their inventory changed?
+- Pothos
+- Bamboo
+- Philodendron
+- Monstera
+- String of pearls
+- ZZ Plant
+
+  
 ## Week 1 Project Answers
 
 ### 1. How many users do we have?
