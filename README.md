@@ -123,17 +123,15 @@ I have added 3 models, `fact_page_views`, `dim_user` and `dim_date`. This is how
 ### Your stakeholders at Greenery want to understand the state of the data each day. Explain how you would ensure these tests are passing regularly and how you would alert stakeholders about bad data getting through.
 
 **Automate Test Execution:**
+- Scheduled Runs: Use dbt's scheduler or a tool like Apache Airflow to run dbt run (for transformations) and dbt test (for data tests) on a daily basis or at the desired frequency. This ensures that tests are executed consistently.
+- Continuous Integration: Integrate dbt within your CI/CD pipeline. Every time there's a change to the dbt models or tests, automatically run the tests to ensure nothing breaks.
 
-Scheduled Runs: Use dbt's scheduler or a tool like Apache Airflow to run dbt run (for transformations) and dbt test (for data tests) on a daily basis or at the desired frequency. This ensures that tests are executed consistently.
-Continuous Integration: Integrate dbt within your CI/CD pipeline. Every time there's a change to the dbt models or tests, automatically run the tests to ensure nothing breaks.
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 **Monitoring and Alerts:**
-
-Integration with Monitoring Tools: Tools like Datadog, Prometheus, or others can be integrated with dbt runs to monitor the success or failure of the jobs.
-Notification on Failure: If a dbt test fails, set up immediate notifications. This can be achieved using:
-- Email Alerts: Send automated emails to the data team or designated stakeholders.
-- Slack Notifications: Use webhooks to send messages to specific Slack channels.
-- PagerDuty: For critical data issues, integrate with incident management platforms.
+- Integration with Monitoring Tools: Tools like Datadog, Prometheus, or others can be integrated with dbt runs to monitor the success or failure of the jobs.
+- Notification on Failure: If a dbt test fails, set up immediate notifications. This can be achieved using:
+  - Email Alerts: Send automated emails to the data team or designated stakeholders.
+  - Slack Notifications: Use webhooks to send messages to specific Slack channels.
+  - PagerDuty: For critical data issues, integrate with incident management platforms.
 
 ### Which products had their inventory changed?
 - Pothos
