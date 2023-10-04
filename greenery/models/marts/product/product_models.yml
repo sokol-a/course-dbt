@@ -25,4 +25,7 @@ models:
           column_name: date_key
           to: ref('dim_date')
           field: date
+  - name: fact_purchase_events
+    description: |
+      Fact table for purchase events metrics 
 

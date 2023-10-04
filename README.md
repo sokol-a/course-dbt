@@ -1,5 +1,88 @@
 # Analytics Engineering with dbt
 
+## Week 3 Project Answers
+### What is our overall conversion rate?
+- **Answer**: around 62.5% 
+- **Query**
+    ```sql
+    SELECT 
+        (SELECT COUNT(DISTINCT session_id) 
+        FROM DEV_DB.DBT_ALEKSANDERSOKOL9GMAILCOM.FACT_PURCHASE_EVENTS) 
+        /
+        (SELECT COUNT(DISTINCT session_id) 
+        FROM DEV_DB.DBT_ALEKSANDERSOKOL9GMAILCOM.STG_POSTGRES__EVENTS) 
+    AS ratio;
+    ```
+### What is the conversion rate by product?
+| PRODUCT_NAME         | PURCHASE_SESSIONS | VIEW_SESSIONS | PURCHASE_RATIO  |
+|----------------------|------------------|---------------|-----------------|
+| Pothos               | 21               | 61            | 0.3442622951    |
+| Bamboo               | 36               | 67            | 0.5373134328    |
+| Philodendron         | 30               | 62            | 0.4838709677    |
+| Monstera             | 25               | 49            | 0.5102040816    |
+| String of pearls     | 39               | 64            | 0.609375        |
+| ZZ Plant             | 34               | 63            | 0.5396825397    |
+| Snake Plant          | 29               | 73            | 0.397260274     |
+| Orchid               | 34               | 75            | 0.4533333333    |
+| Birds Nest Fern      | 33               | 78            | 0.4230769231    |
+| Calathea Makoyana    | 27               | 53            | 0.5094339623    |
+| Peace Lily           | 27               | 66            | 0.4090909091    |
+| Bird of Paradise     | 27               | 60            | 0.45            |
+| Fiddle Leaf Fig      | 28               | 56            | 0.5             |
+| Ficus                | 29               | 68            | 0.4264705882    |
+| Pilea Peperomioides  | 28               | 59            | 0.4745762712    |
+| Angel Wings Begonia  | 24               | 61            | 0.393442623     |
+| Jade Plant           | 22               | 46            | 0.4782608696    |
+| Arrow Head           | 35               | 63            | 0.5555555556    |
+| Majesty Palm         | 33               | 67            | 0.4925373134    |
+| Spider Plant         | 28               | 59            | 0.4745762712    |
+| Money Tree           | 26               | 56            | 0.4642857143    |
+| Cactus               | 30               | 55            | 0.5454545455    |
+| Devil's Ivy          | 22               | 45            | 0.4888888889    |
+| Alocasia Polly       | 21               | 51            | 0.4117647059    |
+| Pink Anthurium       | 31               | 74            | 0.4189189189    |
+| Dragon Tree          | 29               | 62            | 0.4677419355    |
+| Aloe Vera            | 32               | 65            | 0.4923076923    |
+| Rubber Plant         | 28               | 54            | 0.5185185185    |
+| Ponytail Palm        | 28               | 70            | 0.4             |
+| Boston Fern          | 26               | 63            | 0.4126984127    |
+
+**SQL**
+```sql
+WITH PurchaseSessions AS (
+    SELECT DISTINCT
+        product_id,
+        session_id
+    FROM DEV_DB.DBT_ALEKSANDERSOKOL9GMAILCOM.FACT_PURCHASE_EVENTS
+),
+ViewSessions AS (
+    SELECT DISTINCT
+        product_id,
+        session_id
+    FROM DEV_DB.DBT_ALEKSANDERSOKOL9GMAILCOM.FACT_PAGE_VIEWS
+),
+PurchaseRatios AS (
+    SELECT
+        v.product_id,
+        COUNT(DISTINCT p.session_id) AS purchase_sessions,
+        COUNT(DISTINCT v.session_id) AS view_sessions
+    FROM ViewSessions v
+    LEFT JOIN PurchaseSessions p ON v.product_id = p.product_id AND v.session_id = p.session_id
+    GROUP BY v.product_id
+)
+SELECT
+    pr.product_id,
+    p.name as product_name,
+    pr.purchase_sessions,
+    pr.view_sessions,
+    CASE
+        WHEN pr.view_sessions = 0 THEN NULL
+        ELSE pr.purchase_sessions / pr.view_sessions::FLOAT
+    END AS purchase_ratio
+FROM PurchaseRatios pr
+JOIN DEV_DB.DBT_ALEKSANDERSOKOL9GMAILCOM.STG_POSTGRES__PRODUCTS p ON pr.PRODUCT_ID = p.PRODUCT_ID  
+```
+
 ## Week 2 Project Answers
 ### What is our user repeat rate?
 
