@@ -82,6 +82,8 @@ SELECT
 FROM PurchaseRatios pr
 JOIN DEV_DB.DBT_ALEKSANDERSOKOL9GMAILCOM.STG_POSTGRES__PRODUCTS p ON pr.PRODUCT_ID = p.PRODUCT_ID  
 ```
+### DAG
+<img width="791" alt="dag" src="https://github.com/sokol-a/course-dbt/assets/62120019/e66c49c0-0b1c-4dc8-8673-d6d6727d15d1">
 
 ## Week 2 Project Answers
 ### What is our user repeat rate?
