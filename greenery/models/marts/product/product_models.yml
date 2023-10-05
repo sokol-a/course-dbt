@@ -21,10 +21,6 @@ models:
           column_name: user_id
           to: ref('dim_user')
           field: user_id
-      - relationships:
-          column_name: date_key
-          to: ref('dim_date')
-          field: date
   - name: fact_purchase_events
     description: |
       Fact table for purchase events metrics 

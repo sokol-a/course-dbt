@@ -36,3 +36,5 @@ models:
       +materialized: table
     marts:
       +materialized: table
+    +post-hook:
+      - "GRANT SELECT ON {{ this }} TO transformer_dev"

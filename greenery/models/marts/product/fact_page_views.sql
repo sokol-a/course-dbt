@@ -10,8 +10,7 @@ SELECT
     b.page_url,
     b.created_at,
     b.product_id,
-    b.order_id,
-    d.date AS date_key
+    b.order_id
 FROM base b
 JOIN {{ ref('dim_user') }} u ON b.user_id = u.user_id
-JOIN {{ ref('dim_date') }} d ON b.date_key = d.date
+

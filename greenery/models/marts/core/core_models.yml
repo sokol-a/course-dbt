@@ -6,32 +6,15 @@ models:
       Dimension table for dates 
     tests:
       - unique:
-          column_name: date
+          column_name: date_day
       - not_null:
-          column_name: date
-      - not_null:
-          column_name: year
-      - not_null:
-          column_name: quarter
-      - not_null:
-          column_name: month
-      - not_null:
-          column_name: day
-      - not_null:
-          column_name: day_of_year
-      - not_null:
-          column_name: week_of_year
-      - not_null:
-          column_name: day_of_week
-      - not_null:
-          column_name: weekday_weekend
-      - not_null:
-          column_name: season
-
+          column_name: date_day
   - name: dim_user
     description: |
       Dimension table for users
     tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('stg_postgres__users')    
       - unique:
           column_name: user_id
       - not_null:
